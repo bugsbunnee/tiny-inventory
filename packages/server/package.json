@@ -1,0 +1,39 @@
+{
+   "name": "server",
+   "module": "index.ts",
+   "type": "module",
+   "private": true,
+   "scripts": {
+      "start": "bun run index.ts",
+      "dev": "bun --watch run index.ts",
+      "db:migrate": "bunx prisma migrate dev --name",
+      "db:generate": "bunx prisma generate",
+      "db:apply": "bunx prisma migrate deploy"
+   },
+   "devDependencies": {
+      "@types/bun": "latest",
+      "@types/express": "^5.0.6",
+      "@types/lodash": "^4.17.23",
+      "@types/node": "^25.2.0",
+      "@types/pg": "^8.16.0",
+      "prisma": "^7.3.0"
+   },
+   "peerDependencies": {
+      "typescript": "^5"
+   },
+   "dependencies": {
+      "@prisma/adapter-pg": "^7.3.0",
+      "@prisma/client": "^7.3.0",
+      "@types/cors": "^2.8.19",
+      "axios": "^1.13.4",
+      "cors": "^2.8.6",
+      "dotenv": "^17.2.3",
+      "express": "^5.2.1",
+      "helmet": "^8.1.0",
+      "ioredis": "^5.9.2",
+      "lodash": "^4.17.23",
+      "pg": "^8.18.0",
+      "winston": "^3.19.0",
+      "winston-daily-rotate-file": "^5.0.0"
+   }
+}
