@@ -23,10 +23,7 @@ services:
          dockerfile: packages/client/Dockerfile
       ports:
          - 5173:80
-      image: nginx:alpine
       restart: unless-stopped
-      volumes:
-         - ./packages/client/dist:/usr/share/nginx/html:ro
       depends_on:
          - server
 

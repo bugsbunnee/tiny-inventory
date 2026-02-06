@@ -4,7 +4,7 @@
 
 FROM oven/bun:1 AS base
 
-WORKDIR /app
+WORKDIR /usr/app
 
 # Copy package.json files
 COPY packages/client/package.json bun.lockb*  ./
@@ -22,7 +22,9 @@ RUN bun run build
 
 FROM nginx:alpine
 
-COPY --from=base /app/dist /usr/share/nginx/html
+COPY packages/client/src/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=base /usr/app/dist /usr/share/nginx/html
+
 RUN chown -R nginx:nginx /usr/share/nginx/html
 
 EXPOSE 80
