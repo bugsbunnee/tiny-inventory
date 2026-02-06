@@ -9,9 +9,10 @@ services:
          - 3088:3088
       volumes:
          - log_data:/app/packages/server/logs
-      env_file:
-         - packages/server/.env
       restart: unless-stopped
+      environment:
+         PORT: 3088
+         DB_URL: postgresql://postgres:password@db:5432/tiny-inventory
       depends_on:
          - db
          - wait-db
