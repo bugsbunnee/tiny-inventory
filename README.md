@@ -34,7 +34,7 @@ docker compose up --build
 ```
 
 - Backend: [http://localhost:3088](http://localhost:3088)
-- Frontend: [http://localhost:3000](http://localhost:3000)
+- Frontend: [http://localhost:5173](http://localhost:5173)
 
 Seed data is loaded automatically on startup.
 

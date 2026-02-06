@@ -14,13 +14,15 @@ services:
       restart: unless-stopped
       depends_on:
          - db
+         - wait-db
+      command: ['sh', '-c', 'bun run db:apply && bun run start']
 
    client:
       build:
          context: .
          dockerfile: packages/client/Dockerfile
       ports:
-         - 80:3000
+         - 5173:80
       image: nginx:alpine
       restart: unless-stopped
       volumes:
@@ -40,6 +42,11 @@ services:
          POSTGRES_PASSWORD: password
          POSTGRES_DB: tiny-inventory
 
+   wait-db:
+      image: bwibo/wait-for-psql
+      command: ['30', 'db', '5432', 'tiny-inventory', 'postgres', 'password']
+      depends_on:
+         - db
 volumes:
    postgres_data:
    log_data:

@@ -7,14 +7,14 @@ FROM oven/bun:1 AS base
 WORKDIR /app
 
 # Copy package.json files
-COPY package.json bun.lockb* ./
+COPY packages/client/package.json bun.lockb*  ./
 
 # Install dependencies
 RUN bun install --frozen-lockfile
 
-COPY . .
+COPY ./packages/client .
 
-RUN cd /app/packages/client && bun install --frozen-lockfile && bun run build
+RUN bun run build
 
 # ----------------------------------------------
 # STAGE 2
@@ -22,7 +22,7 @@ RUN cd /app/packages/client && bun install --frozen-lockfile && bun run build
 
 FROM nginx:alpine
 
-COPY --from=base /app/packages/client/dist /usr/share/nginx/html
+COPY --from=base /app/dist /usr/share/nginx/html
 EXPOSE 80
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
