@@ -1,45 +1,52 @@
+version: '3.8'
+
 services:
    server:
       build:
          context: .
-         dockerfile: Dockerfile
-      container_name: tiny_inventory_server
+         dockerfile: packages/server/Dockerfile
       ports:
-         - '${PORT}:${PORT}'
+         - 3088:3088
+      volumes:
+         - log_data:/app/packages/server/logs
       env_file:
-         - .env
+         - packages/server/.env
+      restart: unless-stopped
       depends_on:
          - redis
-         - postgres
+         - db
 
    client:
-      image: nginx:alpine
-      container_name: bun_client
+      build:
+         context: .
+         dockerfile: packages/client/Dockerfile
       ports:
-         - '5185:80'
+         - 80:3000
+      image: nginx:alpine
+      restart: unless-stopped
       volumes:
          - ./packages/client/dist:/usr/share/nginx/html:ro
       depends_on:
          - server
 
-   postgres:
+   db:
       image: postgres:16-alpine
-      container_name: bun_postgres
+      ports:
+         - '5433:5432'
+      volumes:
+         - postgres_data:/var/lib/postgresql/data
       restart: always
       environment:
          POSTGRES_USER: postgres
-         POSTGRES_PASSWORD: postgres
-         POSTGRES_DB: app
-      ports:
-         - '5432:5432'
-      volumes:
-         - postgres_data:/var/lib/postgresql/data
+         POSTGRES_PASSWORD: password
+         POSTGRES_DB: tiny-inventory
 
    redis:
       image: redis:7-alpine
-      container_name: bun_redis
       ports:
          - '6379:6379'
+      restart: always
 
 volumes:
    postgres_data:
+   log_data:

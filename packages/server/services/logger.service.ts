@@ -11,7 +11,7 @@ const logger = winston.createLogger({
 if (Bun.env.NODE_ENV === 'production') {
    const rotateFileTransport = new winston.transports.DailyRotateFile({
       level: 'info',
-      filename: 'src/logs/tiny-inventory-%DATE%.log',
+      filename: 'logs/tiny-inventory-%DATE%.log',
       datePattern: 'YYYY-MM-DD',
       zippedArchive: true,
       maxSize: '20m',
