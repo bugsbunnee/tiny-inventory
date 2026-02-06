@@ -8,14 +8,13 @@ WORKDIR /app
 
 # Copy package.json files
 COPY package.json bun.lockb* ./
-COPY packages/client/package.json ./packages/client/
 
 # Install dependencies
-RUN cd /app/packages/client/ && bun install --frozen-lockfile
+RUN bun install --frozen-lockfile
 
 COPY . .
 
-RUN bun run build
+RUN cd /app/packages/client && bun install --frozen-lockfile && bun run build
 
 # ----------------------------------------------
 # STAGE 2
@@ -23,7 +22,7 @@ RUN bun run build
 
 FROM nginx:alpine
 
-COPY --from=base /app/dist /usr/share/nginx/html
+COPY --from=base /app/packages/client/dist /usr/share/nginx/html
 EXPOSE 80
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

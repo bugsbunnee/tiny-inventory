@@ -1,14 +1,14 @@
-import type { Request, Response } from 'express';
-
 import { HttpStatusCode } from 'axios';
+
+import type { Request, Response } from 'express';
+import type { IStoreAggregation } from '../schemas/store.schema';
+
 import { CursorQuerySchema, PaginationQuerySchema, type CursorPaginatedResponse } from '../schemas/pagination.schema';
 import { CACHE_KEYS } from '../utils/constants';
-
-import type { IStoreAggregation } from '../schemas/store.schema';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 
 import StoreRepository from '../repositories/store.repository';
 import cacheService from '../services/cache.service';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 
 class StoreController {
    static async getOneStore(req: Request, res: Response) {
@@ -41,7 +41,7 @@ class StoreController {
       const query = CursorQuerySchema.parse(req.query);
       const cacheKey = CACHE_KEYS.getStoreInventoryKey(query);
 
-      let response = await cacheService.retrieve<CursorPaginatedResponse<IStoreAggregation>>(cacheKey);
+      let response = cacheService.retrieve<CursorPaginatedResponse<IStoreAggregation>>(cacheKey);
 
       if (response) {
          return res.json({
@@ -52,8 +52,7 @@ class StoreController {
       }
 
       response = await StoreRepository.getInventoryByStore(query);
-
-      await cacheService.store(cacheKey, response, 60);
+      cacheService.store(cacheKey, response, 60);
 
       res.json({
          success: true,

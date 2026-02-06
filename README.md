@@ -1,4 +1,4 @@
-# Tiny Inventory — Knostic Home Assignment
+# Tiny Inventory
 
 ## Overview
 
@@ -100,7 +100,7 @@ PostgreSQL was chosen to reflect real‑world relational constraints and enable 
 - **Postgres over SQLite**: Chosen for realistic relational modeling and aggregation use cases.
 - **REST over GraphQL**: Simpler, explicit API semantics for the scope of the assignment.
 - **React Query**: Reduces boilerplate and improves UX around loading and error states.
-- **Redis caching for aggregation**: The `/api/stores/inventories` aggregation endpoint is cached in **Redis** with a very low TTL. This improves performance for expensive aggregation queries while keeping data reasonably fresh — a deliberate trade-off between consistency and speed.
+- **Caching for aggregation**: The `/api/stores/inventories` and `/api/dashboard` aggregation endpoint is cached with a very low TTL. This improves performance for expensive aggregation queries while keeping data reasonably fresh — a deliberate trade-off between consistency and speed.
 - **No authentication**: Intentionally omitted to focus on core domain logic.
 
 ---
