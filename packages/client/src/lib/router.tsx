@@ -1,4 +1,4 @@
-import { type RouteObject } from 'react-router-dom';
+import { Navigate, type RouteObject } from 'react-router-dom';
 
 import Layout from '@/components/pages/Layout';
 import ErrorPage from '@/components/pages/ErrorPage';
@@ -30,6 +30,10 @@ const routes: RouteObject[] = [
             element: <ProductPage />,
          },
       ],
+   },
+   {
+      path: '*',
+      element: <Navigate to="/dashboard" replace />,
    },
 ];
 
