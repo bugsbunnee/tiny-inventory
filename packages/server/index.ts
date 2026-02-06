@@ -1,10 +1,7 @@
-import logger from './services/logger.service';
 import setupApp from './startup/app';
-import setupSeeds from './startup/seed';
+import startServer from './startup/server';
 
 const app = setupApp();
-const port = Bun.env.PORT || 3088;
+startServer(app);
 
-setupSeeds();
-
-app.listen(port, () => logger.info(`Listening on port...`));
+export default app;
