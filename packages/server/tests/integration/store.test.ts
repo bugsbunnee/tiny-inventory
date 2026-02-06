@@ -1,31 +1,17 @@
 import { describe, beforeEach, mock, it, expect, jest, vi, type Mock } from 'bun:test';
 import { HttpStatusCode } from 'axios';
-import { prisma } from '../../../prisma';
-import { SYSTEM_DATE } from '../../constants';
+import { prisma } from '../../prisma';
+import { SYSTEM_DATE } from '../constants';
 
-import type { Store } from '../../../prisma/generated/prisma/client';
-import type { MockStoreCreate } from './entities';
+import type { Store } from '../../prisma/generated/prisma/client';
 
 import request from 'supertest';
 import _ from 'lodash';
 
-import app from '../../..';
-
-mock.module('../../prisma', () => ({
-   prisma: {
-      store: {
-         create: vi.fn(),
-         findMany: vi.fn(),
-         findUnique: vi.fn(),
-         update: vi.fn(),
-         delete: vi.fn(),
-         count: vi.fn(),
-      },
-      $queryRaw: vi.fn(),
-   },
-}));
+import app from '../..';
 
 beforeEach(() => {
+   jest.clearAllMocks();
    jest.useFakeTimers();
    jest.setSystemTime(SYSTEM_DATE);
 });
@@ -38,9 +24,10 @@ describe('POST /api/stores', () => {
          location: 'Lagos',
          created_at: SYSTEM_DATE.toISOString(),
          updated_at: SYSTEM_DATE.toISOString(),
-      } as unknown as Store;
+      };
 
-      (prisma.store.create as unknown as MockStoreCreate).mockResolvedValue(mockStore);
+      const createMock = prisma.store.create as unknown as Mock<typeof prisma.store.create>;
+      createMock.mockResolvedValue(mockStore as unknown as Store);
 
       const payload = _.pick(mockStore, ['name', 'location']);
       const response = await request(app).post('/api/stores').send(payload);

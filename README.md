@@ -107,6 +107,10 @@ PostgreSQL was chosen to reflect real‑world relational constraints and enable 
 
 ## Testing Approach
 
+```bash
+cd packages/server && bun test
+```
+
 Due to time constraints, full test coverage was not implemented. Intended approach:
 
 - Backend: unit tests for services, integration tests for API endpoints
