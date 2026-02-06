@@ -23,6 +23,8 @@ RUN bun run build
 FROM nginx:alpine
 
 COPY --from=base /app/dist /usr/share/nginx/html
+RUN chown -R nginx:nginx /usr/share/nginx/html
+
 EXPOSE 80
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
