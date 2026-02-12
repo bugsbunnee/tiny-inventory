@@ -1,5 +1,4 @@
 import { prisma } from '../prisma';
-import type { Category } from '../prisma/generated/prisma/client';
 
 class SeedService {
    static async seed() {
