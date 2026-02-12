@@ -15,15 +15,9 @@ class SeedService {
       ]);
 
       const [downtown, uptown, lakeside] = await Promise.all([
-         prisma.store.create({
-            data: { name: 'Downtown Boutique', location: '123 Main St, Seattle' },
-         }),
-         prisma.store.create({
-            data: { name: 'Uptown Tech', location: '456 Elm Ave, Austin' },
-         }),
-         prisma.store.create({
-            data: { name: 'Lakeside Home', location: '789 Shore Dr, Chicago' },
-         }),
+         prisma.store.create({ data: { name: 'Downtown Boutique', location: '123 Main St, Seattle' } }),
+         prisma.store.create({ data: { name: 'Uptown Tech', location: '456 Elm Ave, Austin' } }),
+         prisma.store.create({ data: { name: 'Lakeside Home', location: '789 Shore Dr, Chicago' } }),
       ]);
 
       const SEED_PRODUCTS = [
