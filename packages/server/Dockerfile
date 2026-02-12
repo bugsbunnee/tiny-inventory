@@ -13,6 +13,8 @@ RUN bun install --frozen-lockfile
 # Copy the rest of the application
 COPY ./packages/server .
 
+RUN chown -R bun:bun /app
+
 USER bun
 EXPOSE 3088
 

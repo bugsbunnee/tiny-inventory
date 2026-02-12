@@ -16,7 +16,7 @@ services:
       depends_on:
          - db
          - wait-db
-      command: ['sh', '-c', 'bun run db:apply && bun run start']
+      command: ['sh', '-c', 'bun run db:apply && bun run db:generate && bun run start']
 
    client:
       build:
