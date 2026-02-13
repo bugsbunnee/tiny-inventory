@@ -1,6 +1,6 @@
 import type React from 'react';
 
-import { Activity } from 'react';
+import { Activity, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -16,9 +16,6 @@ import { Button } from '../../ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Spinner } from '../../ui/spinner';
 import { productSchema, type ProductItem } from './product-schema';
-
-const DEFAULT_IMAGE_URL =
-   'https://images.unsplash.com/photo-1605496036006-fa36378ca4ab?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
 
 type Props = {
    initialData: Product | null;
@@ -56,14 +53,28 @@ const ProductForm: React.FC<Props> = ({ initialData, onClose }) => {
          description: initialData?.description,
          category_id: initialData?.category?.id,
          store_id: initialData?.store?.id,
-         image_url: initialData?.image_url ?? DEFAULT_IMAGE_URL,
+         image_url: initialData?.image_url,
          quantity_in_stock: initialData?.quantity_in_stock,
       },
    });
 
+   const isLoading = useMemo(() => {
+      return createMutation.isPending || updateMutation.isPending;
+   }, [createMutation.isPending, updateMutation.isPending]);
+
    const handleProductSubmit = (data: ProductItem) => {
-      if (initialData) updateMutation.mutate(data);
-      else createMutation.mutate(data);
+      const productItem: ProductItem = {
+         image_url: data.image_url ? data.image_url : undefined,
+         name: data.name,
+         description: data.description,
+         store_id: data.store_id,
+         category_id: data.category_id,
+         price: data.price,
+         quantity_in_stock: data.quantity_in_stock,
+      };
+
+      if (initialData) updateMutation.mutate(productItem);
+      else createMutation.mutate(productItem);
    };
 
    return (
@@ -74,6 +85,7 @@ const ProductForm: React.FC<Props> = ({ initialData, onClose }) => {
             <Input
                id="name"
                className={form.formState.errors.name ? 'border-red-500' : ''}
+               placeholder="Enter product name"
                {...form.register('name')}
             />
 
@@ -148,6 +160,7 @@ const ProductForm: React.FC<Props> = ({ initialData, onClose }) => {
             <Input
                id="description"
                className={form.formState.errors.description ? 'border-red-500' : ''}
+               placeholder="Enter product description"
                {...form.register('description')}
             />
 
@@ -164,6 +177,7 @@ const ProductForm: React.FC<Props> = ({ initialData, onClose }) => {
                   id="price"
                   type="number"
                   className={form.formState.errors.price ? 'border-red-500' : ''}
+                  placeholder="0.00"
                   step="0.01"
                   {...form.register('price', { valueAsNumber: true })}
                />
@@ -179,6 +193,7 @@ const ProductForm: React.FC<Props> = ({ initialData, onClose }) => {
                <Input
                   id="quantity_in_stock"
                   type="number"
+                  placeholder="e.g. 5"
                   {...form.register('quantity_in_stock', { valueAsNumber: true })}
                />
 
@@ -189,9 +204,9 @@ const ProductForm: React.FC<Props> = ({ initialData, onClose }) => {
          </div>
 
          <div className="space-y-2">
-            <Label htmlFor="image_url">Image URL</Label>
+            <Label htmlFor="image_url">Image URL (Optional)</Label>
 
-            <Input id="image_url" {...form.register('image_url')} />
+            <Input id="image_url" placeholder="https://images.unsplash.com/..." {...form.register('image_url')} />
 
             <p className="text-xs text-slate-400">Paste an Unsplash URL for demo purposes</p>
 
@@ -205,12 +220,12 @@ const ProductForm: React.FC<Props> = ({ initialData, onClose }) => {
                Cancel
             </Button>
 
-            <Button type="submit" disabled={!form.formState.isValid}>
-               <Activity mode={createMutation.isPending ? 'visible' : 'hidden'}>
+            <Button type="submit" disabled={!form.formState.isValid || isLoading}>
+               <Activity mode={isLoading ? 'visible' : 'hidden'}>
                   <Spinner />
                </Activity>
 
-               <Activity mode={createMutation.isPending ? 'hidden' : 'visible'}>
+               <Activity mode={isLoading ? 'hidden' : 'visible'}>
                   {initialData ? 'Update Product' : 'Create Product'}
                </Activity>
             </Button>

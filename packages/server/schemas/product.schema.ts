@@ -4,7 +4,7 @@ import { PaginationQuerySchema } from './pagination.schema';
 export const ProductSchema = z.object({
    name: z.string(),
    price: z.number().positive(),
-   image_url: z.url(),
+   image_url: z.url().optional(),
    description: z.string().min(3, { error: 'Description must be at least 3 characters' }),
    quantity_in_stock: z.number().min(0, 'Quantity in stock cannot be less than 0'),
    category_id: z.number().positive(),

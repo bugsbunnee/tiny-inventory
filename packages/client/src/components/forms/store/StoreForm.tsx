@@ -1,7 +1,7 @@
 import type React from 'react';
 import { storeSchema, type StoreItem } from './store-schema';
 
-import { Activity } from 'react';
+import { Activity, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -48,6 +48,10 @@ const StoreForm: React.FC<Props> = ({ initialData, onClose }) => {
       },
    });
 
+   const isLoading = useMemo(() => {
+      return createMutation.isPending || updateMutation.isPending;
+   }, [createMutation.isPending, updateMutation.isPending]);
+
    const handleStoreSubmit = (data: StoreItem) => {
       if (initialData) updateMutation.mutate(data);
       else createMutation.mutate(data);
@@ -61,6 +65,7 @@ const StoreForm: React.FC<Props> = ({ initialData, onClose }) => {
             <Input
                id="name"
                className={form.formState.errors.name ? 'border-red-500' : ''}
+               placeholder="Enter store name"
                {...form.register('name')}
             />
 
@@ -73,6 +78,7 @@ const StoreForm: React.FC<Props> = ({ initialData, onClose }) => {
             <Input
                id="location"
                className={form.formState.errors.location ? 'border-red-500' : ''}
+               placeholder="Enter store location"
                {...form.register('location')}
             />
 
@@ -86,12 +92,12 @@ const StoreForm: React.FC<Props> = ({ initialData, onClose }) => {
                Cancel
             </Button>
 
-            <Button type="submit" disabled={!form.formState.isValid}>
-               <Activity mode={createMutation.isPending ? 'visible' : 'hidden'}>
+            <Button type="submit" disabled={!form.formState.isValid || isLoading}>
+               <Activity mode={isLoading ? 'visible' : 'hidden'}>
                   <Spinner />
                </Activity>
 
-               <Activity mode={createMutation.isPending ? 'hidden' : 'visible'}>
+               <Activity mode={isLoading ? 'hidden' : 'visible'}>
                   {initialData ? 'Update Store' : 'Create Store'}
                </Activity>
             </Button>

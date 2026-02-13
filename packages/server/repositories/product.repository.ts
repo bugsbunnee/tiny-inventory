@@ -1,4 +1,5 @@
 import { prisma } from '../prisma';
+import { DEFAULT_IMAGE_URL } from '../utils/constants';
 
 import type { Product } from '../prisma/generated/prisma/client';
 import type { ProductWhereInput } from '../prisma/generated/prisma/models';
@@ -54,7 +55,7 @@ class ProductRepository {
             name: product.name,
             price: product.price,
             description: product.description,
-            image_url: product.image_url,
+            image_url: product.image_url ?? DEFAULT_IMAGE_URL,
             quantity_in_stock: product.quantity_in_stock,
             category_id: product.category_id,
             store_id: product.store_id,

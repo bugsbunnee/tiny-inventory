@@ -5,7 +5,7 @@ export const productSchema = z.object({
    price: z.number().positive('Price must be greater than 0'),
    description: z.string().min(4, 'Description must be at least 4 characters'),
    quantity_in_stock: z.number().positive(),
-   image_url: z.string(),
+   image_url: z.union([z.literal(''), z.url()]).optional(),
    category_id: z.number().positive(),
    store_id: z.number().positive(),
 });
