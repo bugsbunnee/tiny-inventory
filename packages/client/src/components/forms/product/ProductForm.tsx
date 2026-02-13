@@ -63,15 +63,7 @@ const ProductForm: React.FC<Props> = ({ initialData, onClose }) => {
    }, [createMutation.isPending, updateMutation.isPending]);
 
    const handleProductSubmit = (data: ProductItem) => {
-      const productItem: ProductItem = {
-         image_url: data.image_url ? data.image_url : undefined,
-         name: data.name,
-         description: data.description,
-         store_id: data.store_id,
-         category_id: data.category_id,
-         price: data.price,
-         quantity_in_stock: data.quantity_in_stock,
-      };
+      const productItem: ProductItem = { ...data, image_url: data.image_url ? data.image_url : undefined };
 
       if (initialData) updateMutation.mutate(productItem);
       else createMutation.mutate(productItem);
